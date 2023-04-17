@@ -16,7 +16,7 @@ pipeline {
         stage('Build image') {
             steps {
                 script {
-                     sh "docker build -t hareesh5041/pipeline:${env.BUILD_ID} .")
+                     sh "docker build -t hareesh5041/pipeline:${env.BUILD_ID}")
                     }
             }
         }
