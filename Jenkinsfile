@@ -1,38 +1,21 @@
-pipeline {
-    agent any
-    environment {
-        PROJECT_ID = 'rising-timing-383506'
-                CLUSTER_NAME = 'jenkins'
-                LOCATION = 'asia-southeast1-a'
-                CREDENTIALS_ID = 'kubernetes'
+node{
+    stage("Git CheckOut"){
+        git url: 'https://github.com/MithunTechnologiesDevOps/spring-boot-mongo-docker.git',branch: 'master'
     }
     
-    stages {
-        stage('Checkout') {
-            steps {
-                checkout scm
-            }
+    stage(" Maven Clean Package"){
+      sh "mvn clean package"
+    } 
+    
+    stage("Build Dokcer Image") {
+         sh "docker build -t hareesh5041/spring-boot-mongo ."
+    }
+    
+    stage("Docker Push"){
+        withCredentials([string(credentialsId: 'DockerPwd', variable: 'DockerPwd')]) {
+          sh "docker login -u hareesh5041 -p ${DockerPwd}"
         }
-        stage('Build image') {
-            steps {
-                script {
-                     sh "docker build -t pipeline .")
-                    }
-            }
-        }
+        sh "docker push hareesh5041/spring-boot-mongo"
         
-        stage('Push image') {
-            steps {
-                script {
-                    withCredentials( \
-                                 [string(credentialsId: 'dockerhub',\
-                                 variable: 'dockerhub')]) {
-                        sh "docker login -u hareesh5041 -p ${dockerhub}"
-                    }
-                    app.push("${env.BUILD_ID}")
-                 }
-                                 
-            }
-        }
     }
 }
