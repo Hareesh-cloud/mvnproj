@@ -1,6 +1,6 @@
 node{
     stage("Git CheckOut"){
-        git url: 'https://github.com/MithunTechnologiesDevOps/spring-boot-mongo-docker.git',branch: 'master'
+        git url: 'https://github.com/Hareesh-cloud/mvnproj.git',branch: 'master'
     }
     
     stage(" Maven Clean Package"){
